@@ -37,7 +37,20 @@ public class Booking {
     @ManyToOne
     @JoinColumn(name = "memberId", nullable = true)
     private Member member;
+    
+    // Constructor
+    public Booking() {
+    }
 
+    public Booking(LocalDate date, Duration duration, State state, boolean isCancelled, Member member) {
+        this.date = date;
+        this.duration = duration;
+        this.state = state;
+        this.isCancelled = isCancelled;
+        this.member = member;
+    }
+
+    // Getter/Setter
     public long getBookingId() {
         return bookingId;
     }
@@ -86,5 +99,4 @@ public class Booking {
         this.member = member;
     }
 
-    
 }

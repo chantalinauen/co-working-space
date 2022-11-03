@@ -25,6 +25,17 @@ public class Role {
     @OneToMany(mappedBy = "role")
     private Set<Member> members;
 
+
+    //Constructor
+    public Role() {
+    }
+    
+    public Role(String title) {
+        this.title = title;
+    }
+
+
+    // Getter/Setter
     public long getRoleId() {
         return roleId;
     }

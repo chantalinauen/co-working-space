@@ -25,6 +25,16 @@ public class Duration {
     @OneToMany(mappedBy = "duration")
     private Set<Booking> bookings;
 
+    // Constructor
+    public Duration() {
+    }
+
+    public Duration(String title) {
+        this.title = title;
+    }
+
+
+    // Getter/Setter
     public long getDurationId() {
         return durationId;
     }

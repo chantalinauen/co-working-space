@@ -25,6 +25,17 @@ public class State {
     @OneToMany(mappedBy = "state")
     private Set<Booking> bookings;
 
+    
+    //Constructor
+    public State() {
+    }
+
+    public State(String title) {
+        this.title = title;
+    }
+
+
+    // Getter/Setter
     public long getStateId() {
         return stateId;
     }

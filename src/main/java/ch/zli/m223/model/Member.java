@@ -33,7 +33,7 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private int highDeskHight;
 
     @Column(nullable = true)
@@ -49,6 +49,24 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private Set<Booking> bookings;
 
+    // Constructor
+    public Member() {
+    }
+
+    public Member(String firstname, String lastname, String emailAddress, String password, int highDeskHight,
+            String standardDrink, boolean isActive, Role role) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.emailAddress = emailAddress;
+        this.password = password;
+        this.highDeskHight = highDeskHight;
+        this.standardDrink = standardDrink;
+        this.isActive = isActive;
+        this.role = role;
+    }
+
+
+    // Getter/Setter
     public long getMemberId() {
         return memberId;
     }
