@@ -25,4 +25,29 @@ public class Duration {
     @OneToMany(mappedBy = "duration")
     private Set<Booking> bookings;
 
+    public long getDurationId() {
+        return durationId;
+    }
+
+    public void setDurationId(long durationId) {
+        this.durationId = durationId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Set<Booking> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(Set<Booking> bookings) {
+        this.bookings = bookings;
+    }
+
+    
 }
