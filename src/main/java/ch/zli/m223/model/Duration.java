@@ -11,6 +11,8 @@ import javax.persistence.OneToMany;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Duration {
     
@@ -23,6 +25,7 @@ public class Duration {
     private String title;
 
     @OneToMany(mappedBy = "duration")
+    @JsonManagedReference
     private Set<Booking> bookings;
 
     // Constructor

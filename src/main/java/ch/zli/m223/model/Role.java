@@ -11,6 +11,8 @@ import javax.persistence.OneToMany;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Role {
     
@@ -23,6 +25,7 @@ public class Role {
     private String title;
 
     @OneToMany(mappedBy = "role")
+    @JsonManagedReference
     private Set<Member> members;
 
 

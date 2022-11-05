@@ -13,6 +13,9 @@ import javax.persistence.OneToMany;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Member {
 
@@ -43,10 +46,12 @@ public class Member {
     private boolean isActive = true;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "roleId", nullable = false)
     private Role role;
 
     @OneToMany(mappedBy = "member")
+    @JsonManagedReference
     private Set<Booking> bookings;
 
     // Constructor

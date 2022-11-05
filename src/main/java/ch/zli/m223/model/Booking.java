@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Booking {
 
@@ -24,10 +26,12 @@ public class Booking {
     private LocalDate date;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "durationId", nullable = true)
     private Duration duration;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "stateId", nullable = true)
     private State state;
 
@@ -35,6 +39,7 @@ public class Booking {
     private boolean isCancelled;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "memberId", nullable = true)
     private Member member;
     
