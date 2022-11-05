@@ -1,0 +1,43 @@
+package ch.zli.m223.service;
+
+import java.util.List;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.transaction.Transactional;
+
+import ch.zli.m223.model.Member;
+
+@ApplicationScoped
+public class MemberService {
+
+    @Inject
+    EntityManager entityManager;
+
+    public List<Member> getAllMembers() {
+        return entityManager.createQuery("FROM Member", Member.class).getResultList();
+    }
+
+    @Transactional
+    public Member createMember(Member member) {
+        return entityManager.merge(member);
+    }
+
+    @Transactional
+    public Member updateMember(long memberId, Member member) {
+        member.setMemberId(memberId);
+        return entityManager.merge(member);
+    }
+
+    @Transactional
+    public void changeActiveState(long memberId, boolean activeState) {
+        Query query = entityManager.createQuery(
+                "UPDATE Member m SET m.isActive = :activeState WHERE m.memberId = :memberId");
+        query.setParameter("memberId", memberId);
+        query.setParameter("activeState", activeState);
+        query.executeUpdate();
+    }
+
+}
