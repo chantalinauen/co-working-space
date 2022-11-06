@@ -1,6 +1,7 @@
 package ch.zli.m223.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -50,6 +51,13 @@ public class MemberService {
         query.setParameter("role", selectedRole);
         query.setParameter("memberId", memberId);
         query.executeUpdate();
+    }
+
+    public Optional<Member> findByEmail(String email) {
+        return entityManager.createQuery("SELECT m FROM Member m WHERE m.emailAddress = :email", Member.class)
+                .setParameter("email", email)
+                .getResultStream()
+                .findFirst();
     }
 
 }
