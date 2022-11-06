@@ -12,16 +12,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(readOnly = true)  
+    @Schema(readOnly = true)
     private long memberId;
 
     @Column(nullable = false)
@@ -46,12 +44,11 @@ public class Member {
     private boolean isActive = true;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonIgnoreProperties("members")
     @JoinColumn(name = "roleId", nullable = false)
     private Role role;
 
     @OneToMany(mappedBy = "member")
-    @JsonManagedReference
     private Set<Booking> bookings;
 
     // Constructor
@@ -69,7 +66,6 @@ public class Member {
         this.isActive = isActive;
         this.role = role;
     }
-
 
     // Getter/Setter
     public long getMemberId() {
@@ -151,5 +147,5 @@ public class Member {
     public void setBookings(Set<Booking> bookings) {
         this.bookings = bookings;
     }
-    
+
 }

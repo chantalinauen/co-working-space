@@ -12,10 +12,14 @@ import javax.persistence.ManyToOne;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 public class Booking {
+
+    public static final String OPEN = "open";
+    public static final String REJECTED = "rejected";
+    public static final String ACCEPTED = "accepted";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,12 +30,12 @@ public class Booking {
     private LocalDate date;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonIgnoreProperties("bookings")
     @JoinColumn(name = "durationId", nullable = true)
     private Duration duration;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonIgnoreProperties("bookings")
     @JoinColumn(name = "stateId", nullable = true)
     private State state;
 
@@ -39,10 +43,10 @@ public class Booking {
     private boolean isCancelled;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonIgnoreProperties("bookings")
     @JoinColumn(name = "memberId", nullable = true)
     private Member member;
-    
+
     // Constructor
     public Booking() {
     }

@@ -10,33 +10,30 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Role {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(readOnly = true)  
+    @Schema(readOnly = true)
     private long roleId;
 
     @Column(nullable = false, unique = true)
     private String title;
 
     @OneToMany(mappedBy = "role")
-    @JsonManagedReference
+    @JsonIgnore
     private Set<Member> members;
 
-
-    //Constructor
+    // Constructor
     public Role() {
     }
-    
+
     public Role(String title) {
         this.title = title;
     }
-
 
     // Getter/Setter
     public long getRoleId() {
@@ -63,5 +60,4 @@ public class Role {
         this.members = members;
     }
 
-    
 }
