@@ -40,4 +40,16 @@ public class MemberService {
         query.executeUpdate();
     }
 
+    @Transactional
+    public void changeRole(long memberId, String role) {
+        Query selectRoleQuery = entityManager.createQuery("SELECT r FROM Role r WHERE r.title = :role ");
+        Object selectedRole = selectRoleQuery.setParameter("role", role).getSingleResult();
+
+        Query query = entityManager.createQuery(
+                "UPDATE Member m SET m.role = :role WHERE m.memberId = :memberId");
+        query.setParameter("role", selectedRole);
+        query.setParameter("memberId", memberId);
+        query.executeUpdate();
+    }
+
 }

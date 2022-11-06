@@ -15,6 +15,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class Role {
 
+    public static final String ADMIN = "administrator";
+    public static final String MEMBER = "member";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(readOnly = true)

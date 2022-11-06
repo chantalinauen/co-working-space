@@ -35,8 +35,8 @@ public class GenerateTestDataService {
         entityManager.persist(durationDay);
 
         // Roles
-        Role roleMember = new Role("member");
-        Role roleAdmin = new Role("administrator");
+        Role roleMember = new Role(Role.MEMBER);
+        Role roleAdmin = new Role(Role.ADMIN);
         entityManager.persist(roleMember);
         entityManager.persist(roleAdmin);
 

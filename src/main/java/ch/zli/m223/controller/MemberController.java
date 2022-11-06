@@ -60,4 +60,11 @@ public class MemberController {
         memberService.changeActiveState(id, false);
     }
 
+    @Path("/rights/{memberId}/{role}")
+    @PUT
+    @Operation(summary = "Changes the role of a member", description = "Updates the role of a member by its ID")
+    public void update(@PathParam("memberId") long id, @PathParam("role") String role) {
+        memberService.changeRole(id, role);
+    }
+
 }
