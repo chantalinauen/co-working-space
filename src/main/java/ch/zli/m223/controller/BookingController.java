@@ -2,6 +2,7 @@ package ch.zli.m223.controller;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -18,17 +19,20 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import ch.zli.m223.model.Booking;
+import ch.zli.m223.model.Role;
 import ch.zli.m223.model.State;
 import ch.zli.m223.service.BookingService;
 
 @Path("/bookings")
 @Tag(name = "Booking", description = "Handling of bookings")
+@RolesAllowed({ Role.ADMIN, Role.MEMBER })
 public class BookingController {
 
     @Inject
     BookingService bookingService;
 
     @Path("{memberId}")
+    @RolesAllowed({ Role.ADMIN, Role.MEMBER })
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Lists all bookings of a member.", description = "Returns a list of the bookings.")
@@ -36,6 +40,7 @@ public class BookingController {
         return bookingService.getBookingsOfMemberById(id);
     }
 
+    @RolesAllowed(Role.ADMIN)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Lists all bookings of all members.", description = "Returns a list of the existing bookings of all members.")
@@ -43,6 +48,7 @@ public class BookingController {
         return bookingService.getAllBookings();
     }
 
+    @RolesAllowed({ Role.ADMIN, Role.MEMBER })
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -52,6 +58,7 @@ public class BookingController {
     }
 
     @Path("/{bookingId}")
+    @RolesAllowed(Role.ADMIN)
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -61,6 +68,7 @@ public class BookingController {
     }
 
     @Path("/accept/{bookingId}")
+    @RolesAllowed(Role.ADMIN)
     @PUT
     @Operation(summary = "Accepts a booking.", description = "Sets the state of a booking to 'accepted'.")
     public void acceptBooking(@PathParam("bookingId") long id) {
@@ -68,6 +76,7 @@ public class BookingController {
     }
 
     @Path("/reject/{bookingId}")
+    @RolesAllowed(Role.ADMIN)
     @PUT
     @Operation(summary = "Rejects a booking.", description = "Sets the state of a booking to 'rejected'.")
     public void rejectBooking(@PathParam("bookingId") long id) {
@@ -75,6 +84,7 @@ public class BookingController {
     }
 
     @Path("/{bookingId}")
+    @RolesAllowed({ Role.ADMIN, Role.MEMBER })
     @DELETE
     @Operation(summary = "Deletes a booking.", description = "Deletes a booking by its id, respectivly set isCancelled state. For better readability it's a DELETE request.")
     public void delete(@PathParam("bookingId") long id) {
