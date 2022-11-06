@@ -41,9 +41,9 @@ public class GenerateTestDataService {
         entityManager.persist(roleAdmin);
 
         // States
-        State stateAccept = new State("accept");
-        State stateReject = new State("reject");
-        State stateOpen = new State("open");
+        State stateAccept = new State(State.ACCEPTED);
+        State stateReject = new State(State.REJECTED);
+        State stateOpen = new State(State.OPEN);
         entityManager.persist(stateAccept);
         entityManager.persist(stateReject);
         entityManager.persist(stateOpen);
