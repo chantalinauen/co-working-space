@@ -17,10 +17,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 public class Booking {
 
-    public static final String OPEN = "open";
-    public static final String REJECTED = "rejected";
-    public static final String ACCEPTED = "accepted";
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(readOnly = true)
