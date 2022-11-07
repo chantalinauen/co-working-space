@@ -72,8 +72,19 @@ public class BookingController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(summary = "Creates a new booking.", description = "Creates a new booking and returns it.")
-    public Booking createBooking(@Valid Booking booking) {
-        return bookingService.createBooking(booking);
+    public Booking createBooking(@Valid Booking booking, SecurityContext ctx) {
+        Booking newBooking;
+        if (ctx.isUserInRole(Role.ADMIN)) {
+            newBooking = bookingService.createBooking(booking);
+        } else {
+            Optional<Member> operator = memberService.findByEmail(ctx.getUserPrincipal().getName());
+            if (operator.isPresent() && operator.get().getMemberId() == booking.getMember().getMemberId()) {
+                newBooking = bookingService.createBooking(booking);
+            } else {
+                throw new WebApplicationException(Response.status(Response.Status.FORBIDDEN).build());
+            }
+        }
+        return newBooking;
     }
 
     @Path("/{bookingId}")
