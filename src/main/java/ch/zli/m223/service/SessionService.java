@@ -17,6 +17,8 @@ import io.smallrye.jwt.build.Jwt;
 @ApplicationScoped
 public class SessionService {
 
+  private static final String ISSUER = "https://zli.example.com/";
+
   @Inject
   MemberService memberService;
 
@@ -25,12 +27,23 @@ public class SessionService {
 
     try {
       if (principal.isPresent() && principal.get().getPassword().equals(credentials.getPassword())) {
-        String token = Jwt
-            .issuer("https://zli.example.com/")
-            .upn(credentials.getEmail())
-            .groups(new HashSet<>(Arrays.asList(Role.MEMBER, Role.ADMIN)))
-            .expiresIn(Duration.ofHours(24))
-            .sign();
+        String token;
+        if (principal.get().getRole().toString().equals(Role.ADMIN)) {
+          token = Jwt
+              .issuer(ISSUER)
+              .upn(credentials.getEmail())
+              .groups(new HashSet<>(Arrays.asList(Role.ADMIN)))
+              .expiresIn(Duration.ofHours(24))
+              .sign();
+        } else {
+          token = Jwt
+              .issuer(ISSUER)
+              .upn(credentials.getEmail())
+              .groups(new HashSet<>(Arrays.asList(Role.MEMBER)))
+              .expiresIn(Duration.ofHours(24))
+              .sign();
+        }
+
         return Response
             .ok(principal.get())
             .header("Authorization", "Bearer " + token)
