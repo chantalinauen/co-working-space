@@ -46,12 +46,9 @@ public class BookingController {
     @Operation(summary = "Lists all bookings of a member.", description = "Returns a list of the bookings.")
     public List<Booking> listBookingsOfMember(@PathParam("memberId") long id, SecurityContext ctx) {
         List<Booking> bookingsOfMember;
-        System.out.println(ctx.isUserInRole(Role.ADMIN));
         if (ctx.isUserInRole(Role.ADMIN)) {
             bookingsOfMember = bookingService.getBookingsOfMember(id);
-            System.out.println(bookingsOfMember);
         } else {
-            System.out.println(ctx.getUserPrincipal().getName());
             Optional<Member> member = memberService.findByEmail(ctx.getUserPrincipal().getName());
             if (member.isPresent() && member.get().getMemberId() == id) {
                 bookingsOfMember = bookingService.getBookingsOfMember(id);
