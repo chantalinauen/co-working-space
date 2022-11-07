@@ -49,8 +49,8 @@ public class BookingController {
         if (ctx.isUserInRole(Role.ADMIN)) {
             bookingsOfMember = bookingService.getBookingsOfMember(id);
         } else {
-            Optional<Member> member = memberService.findByEmail(ctx.getUserPrincipal().getName());
-            if (member.isPresent() && member.get().getMemberId() == id) {
+            Optional<Member> operator = memberService.findByEmail(ctx.getUserPrincipal().getName());
+            if (operator.isPresent() && operator.get().getMemberId() == id) {
                 bookingsOfMember = bookingService.getBookingsOfMember(id);
             } else {
                 throw new WebApplicationException(Response.status(Response.Status.FORBIDDEN).build());
@@ -106,8 +106,17 @@ public class BookingController {
     @RolesAllowed({ Role.ADMIN, Role.MEMBER })
     @DELETE
     @Operation(summary = "Deletes a booking.", description = "Deletes a booking by its id, respectivly set isCancelled state. For better readability it's a DELETE request.")
-    public void delete(@PathParam("bookingId") long id) {
-        bookingService.cancelBooking(id);
+    public void delete(@PathParam("bookingId") long id, SecurityContext ctx) {
+        if (ctx.isUserInRole(Role.ADMIN)) {
+            bookingService.cancelBooking(id);
+        } else {
+            Optional<Member> operator = memberService.findByEmail(ctx.getUserPrincipal().getName());
+            if (operator.isPresent() && operator.get().getMemberId() == id) {
+                bookingService.cancelBooking(id);
+            } else {
+                throw new WebApplicationException(Response.status(Response.Status.FORBIDDEN).build());
+            }
+        }
     }
 
 }
