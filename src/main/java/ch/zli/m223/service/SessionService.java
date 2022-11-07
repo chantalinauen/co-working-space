@@ -28,7 +28,7 @@ public class SessionService {
     try {
       if (principal.isPresent() && principal.get().getPassword().equals(credentials.getPassword())) {
         String token;
-        if (principal.get().getRole().toString().equals(Role.ADMIN)) {
+        if (principal.get().getRole().getTitle().equals(Role.ADMIN)) {
           token = Jwt
               .issuer(ISSUER)
               .upn(credentials.getEmail())
@@ -46,14 +46,18 @@ public class SessionService {
 
         return Response
             .ok(principal.get())
+            .status(201)
             .header("Authorization", "Bearer " + token)
             .build();
+
+      } else {
+        return Response.status(401, "Email address or password is wrong.").build();
       }
     } catch (Exception e) {
       System.err.println("Could not validate password.");
     }
 
-    return Response.status(Response.Status.FORBIDDEN).build();
+    return Response.status(Response.Status.BAD_REQUEST).build(); // 400
   }
 
 }
