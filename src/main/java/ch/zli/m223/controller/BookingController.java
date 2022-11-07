@@ -1,6 +1,7 @@
 package ch.zli.m223.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -13,15 +14,20 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import ch.zli.m223.model.Booking;
+import ch.zli.m223.model.Member;
 import ch.zli.m223.model.Role;
 import ch.zli.m223.model.State;
 import ch.zli.m223.service.BookingService;
+import ch.zli.m223.service.MemberService;
 
 @Path("/bookings")
 @Tag(name = "Booking", description = "Handling of bookings")
@@ -30,14 +36,30 @@ public class BookingController {
 
     @Inject
     BookingService bookingService;
+    @Inject
+    MemberService memberService;
 
     @Path("{memberId}")
     @RolesAllowed({ Role.ADMIN, Role.MEMBER })
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Lists all bookings of a member.", description = "Returns a list of the bookings.")
-    public List<Booking> listBookingsOfMember(@PathParam("memberId") long id) {
-        return bookingService.getBookingsOfMemberById(id);
+    public List<Booking> listBookingsOfMember(@PathParam("memberId") long id, SecurityContext ctx) {
+        List<Booking> bookingsOfMember;
+        System.out.println(ctx.isUserInRole(Role.ADMIN));
+        if (ctx.isUserInRole(Role.ADMIN)) {
+            bookingsOfMember = bookingService.getBookingsOfMember(id);
+            System.out.println(bookingsOfMember);
+        } else {
+            System.out.println(ctx.getUserPrincipal().getName());
+            Optional<Member> member = memberService.findByEmail(ctx.getUserPrincipal().getName());
+            if (member.isPresent() && member.get().getMemberId() == id) {
+                bookingsOfMember = bookingService.getBookingsOfMember(id);
+            } else {
+                throw new WebApplicationException(Response.status(Response.Status.FORBIDDEN).build());
+            }
+        }
+        return bookingsOfMember;
     }
 
     @RolesAllowed(Role.ADMIN)

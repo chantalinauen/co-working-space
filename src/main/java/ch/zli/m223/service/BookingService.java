@@ -6,7 +6,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 import ch.zli.m223.model.Booking;
@@ -17,15 +16,16 @@ public class BookingService {
     @Inject
     EntityManager entityManager;
 
-    public List<Booking> getBookingsOfMemberById(long memberId) {
-        Query selectMembQuery = entityManager.createQuery("SELECT m FROM Member m WHERE m.memberId = :memberId ");
-        selectMembQuery.setParameter("memberId", memberId);
-        Object selectedMember = selectMembQuery.getSingleResult();
+    public List<Booking> getBookingsOfMember(long memberId) {
+        Object selectedMember = entityManager.createQuery("SELECT m FROM Member m WHERE m.memberId = :memberId ")
+                .setParameter("memberId", memberId)
+                .getSingleResult();
 
-        TypedQuery<Booking> query = entityManager.createQuery(
+        return entityManager.createQuery(
                 "SELECT b FROM Booking b WHERE b.member = :memberId",
-                Booking.class);
-        return query.setParameter("memberId", selectedMember).getResultList();
+                Booking.class)
+                .setParameter("memberId", selectedMember)
+                .getResultList();
     }
 
     public List<Booking> getAllBookings() {
