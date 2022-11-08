@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.FutureOrPresent;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
@@ -22,6 +23,7 @@ public class Booking {
     @Schema(readOnly = true)
     private long bookingId;
 
+    @FutureOrPresent
     @Column(nullable = false)
     private LocalDate date;
 

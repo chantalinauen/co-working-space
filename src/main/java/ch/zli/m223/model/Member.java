@@ -10,9 +10,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PositiveOrZero;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import io.smallrye.common.constraint.NotNull;
 
 @Entity
 public class Member {
@@ -22,25 +30,32 @@ public class Member {
     @Schema(readOnly = true)
     private long memberId;
 
+    @NotBlank
     @Column(nullable = false)
     private String firstname;
 
+    @NotBlank
     @Column(nullable = false)
     private String lastname;
 
+    @Email
+    @NotNull
     @Column(nullable = false, unique = true)
     private String emailAddress;
 
+    @Min(10)
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @PositiveOrZero
+    @Max(10)
+    @Column(nullable = true)
     private int highDeskHight;
 
     @Column(nullable = true)
     private String standardDrink;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private boolean isActive = true;
 
     @ManyToOne
