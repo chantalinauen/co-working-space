@@ -66,7 +66,7 @@ public class MemberController {
     @Path("/rights/{memberId}/{role}")
     @PUT
     @Operation(summary = "Changes the role of a member", description = "Updates the role of a member by its ID")
-    public void update(@PathParam("memberId") long id, @PathParam("role") String role) {
+    public void editRights(@PathParam("memberId") long id, @PathParam("role") String role) {
         memberService.changeRole(id, role);
     }
 
