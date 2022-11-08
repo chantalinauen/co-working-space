@@ -6,8 +6,9 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.transaction.Transactional;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 
 import ch.zli.m223.model.Member;
 
@@ -29,28 +30,43 @@ public class MemberService {
     @Transactional
     public Member updateMember(long memberId, Member member) {
         member.setMemberId(memberId);
-        return entityManager.merge(member);
+        Member updatedMember = entityManager.merge(member);
+        
+        if (updatedMember == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        } else {
+            return updatedMember;
+        }
     }
 
     @Transactional
     public void changeActiveState(long memberId, boolean activeState) {
-        Query query = entityManager.createQuery(
-                "UPDATE Member m SET m.isActive = :activeState WHERE m.memberId = :memberId");
-        query.setParameter("memberId", memberId);
-        query.setParameter("activeState", activeState);
-        query.executeUpdate();
+        int updatedMembers = entityManager.createQuery(
+                "UPDATE Member m SET m.isActive = :activeState WHERE m.memberId = :memberId")
+                .setParameter("memberId", memberId)
+                .setParameter("activeState", activeState)
+                .executeUpdate();
+
+        if (updatedMembers == 0) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
     }
 
     @Transactional
     public void changeRole(long memberId, String role) {
-        Query selectRoleQuery = entityManager.createQuery("SELECT r FROM Role r WHERE r.title = :role ");
-        Object selectedRole = selectRoleQuery.setParameter("role", role).getSingleResult();
+        Object selectedRole = entityManager.createQuery("SELECT r FROM Role r WHERE r.title = :role ")
+                .setParameter("role", role)
+                .getSingleResult();
 
-        Query query = entityManager.createQuery(
-                "UPDATE Member m SET m.role = :role WHERE m.memberId = :memberId");
-        query.setParameter("role", selectedRole);
-        query.setParameter("memberId", memberId);
-        query.executeUpdate();
+        int updatedMembers = entityManager.createQuery(
+                "UPDATE Member m SET m.role = :role WHERE m.memberId = :memberId")
+                .setParameter("role", selectedRole)
+                .setParameter("memberId", memberId)
+                .executeUpdate();
+
+        if (updatedMembers == 0) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
     }
 
     public Optional<Member> findByEmail(String email) {
