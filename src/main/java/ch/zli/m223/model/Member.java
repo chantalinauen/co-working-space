@@ -12,9 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
@@ -43,7 +43,7 @@ public class Member {
     @Column(nullable = false, unique = true)
     private String emailAddress;
 
-    @Min(10)
+    @Size(min = 10, max = 30, message = "Your password must have 10 to 30 characters.")
     @Column(nullable = false)
     private String password;
 
