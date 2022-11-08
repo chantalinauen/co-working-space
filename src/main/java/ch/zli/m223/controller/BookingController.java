@@ -21,6 +21,7 @@ import javax.ws.rs.core.SecurityContext;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.jboss.resteasy.reactive.ResponseStatus;
 
 import ch.zli.m223.model.Booking;
 import ch.zli.m223.model.Member;
@@ -71,6 +72,7 @@ public class BookingController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @ResponseStatus(201)
     @Operation(summary = "Creates a new booking.", description = "Creates a new booking and returns it.")
     public Booking createBooking(@Valid Booking booking, SecurityContext ctx) {
         Booking newBooking;

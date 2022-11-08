@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.jboss.resteasy.reactive.ResponseStatus;
 
 import ch.zli.m223.model.Member;
 import ch.zli.m223.model.Role;
@@ -42,6 +43,7 @@ public class MemberController {
     @PermitAll
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @ResponseStatus(201)
     @Operation(summary = "Creates a new member.", description = "Creates a new member and returns the newly added member.")
     public Member createMember(@Valid Member member) {
         return memberService.createMember(member);
