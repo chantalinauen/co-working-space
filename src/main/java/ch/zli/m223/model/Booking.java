@@ -35,7 +35,7 @@ public class Booking {
     @JoinColumn(name = "stateId", nullable = true)
     private State state;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private boolean isCancelled;
 
     @ManyToOne

@@ -49,7 +49,7 @@ public class Member {
 
     @PositiveOrZero
     @Max(10)
-    @Column(nullable = true)
+    @Column(nullable = false)
     private int highDeskHight;
 
     @Column(nullable = true)
@@ -60,7 +60,7 @@ public class Member {
 
     @ManyToOne
     @JsonIgnoreProperties("members")
-    @JoinColumn(name = "roleId", nullable = false)
+    @JoinColumn(name = "roleId")
     private Role role;
 
     @OneToMany(mappedBy = "member")

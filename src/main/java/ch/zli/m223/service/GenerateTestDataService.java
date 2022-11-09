@@ -13,18 +13,18 @@ import ch.zli.m223.model.Duration;
 import ch.zli.m223.model.Member;
 import ch.zli.m223.model.Role;
 import ch.zli.m223.model.State;
-import io.quarkus.arc.profile.IfBuildProfile;
+import io.quarkus.arc.profile.UnlessBuildProfile;
 import io.quarkus.runtime.StartupEvent;
 
-@IfBuildProfile("dev")
+@UnlessBuildProfile("prod")
 @ApplicationScoped
 public class GenerateTestDataService {
-    
+
     @Inject
     EntityManager entityManager;
-  
+
     @Transactional
-    void generateTestData(@Observes StartupEvent event) {
+    public void generateTestData(@Observes StartupEvent event) {
 
         // Durations
         Duration durationMorning = new Duration("morning");
@@ -50,16 +50,16 @@ public class GenerateTestDataService {
 
         // Members
         Member memberKevin = new Member(
-            "Kevin", "Meier", "kevin.meier@test.ch", 
-        "Password123", 7, null, true, roleMember);
+                "Kevin", "Meier", "kevin.meier@test.ch",
+                "Password123", 7, null, true, roleMember);
 
         Member memberLukas = new Member(
-            "Lukas", "Grunder", "lukas.grunder@test.ch", 
-        "MeinPasswort", 9, "Tony Mate", false, roleMember);
-        
+                "Lukas", "Grunder", "lukas.grunder@test.ch",
+                "MeinPasswort", 9, "Tony Mate", false, roleMember);
+
         Member memberChantal = new Member(
-            "Chantal", "Inauen", "chantal.inauen@test.ch", 
-        "Password789", 0, "Cola Zero", true, roleAdmin);
+                "Chantal", "Inauen", "chantal.inauen@test.ch",
+                "Password789", 0, "Cola Zero", true, roleAdmin);
 
         entityManager.persist(memberKevin);
         entityManager.persist(memberLukas);
@@ -67,12 +67,14 @@ public class GenerateTestDataService {
 
         // Bookings
         Booking bookingOne = new Booking(LocalDate.now().plusMonths(3), durationMorning, stateOpen, false, memberKevin);
-        Booking bookingTwo = new Booking(LocalDate.now().minusMonths(2), durationAfternoon, stateAccept, false, memberLukas  );
-        Booking bookingThree = new Booking(LocalDate.now().plusMonths(7), durationAfternoon, stateReject, false, memberKevin  );
+        Booking bookingTwo = new Booking(LocalDate.now().minusMonths(2), durationAfternoon, stateAccept, false,
+                memberLukas);
+        Booking bookingThree = new Booking(LocalDate.now().plusMonths(7), durationAfternoon, stateReject, false,
+                memberKevin);
 
         entityManager.persist(bookingOne);
         entityManager.persist(bookingTwo);
         entityManager.persist(bookingThree);
     }
-  
+
 }
