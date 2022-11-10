@@ -77,6 +77,42 @@ public class BookingResourceTest {
     }
 
     @Test
+    @TestSecurity(user = MEMBER_KEVIN_EMAIL, roles = Role.MEMBER)
+    @DisplayName("Should respond with 200")
+    public void memberShouldBeAbleToGetOwnBookings() {
+
+        given()
+                .when().get(bookingEndpoint + "/" + BOOKING_ID_BY_KEVIN)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(not("[]"));
+    }
+
+    @Test
+    @TestSecurity(user = MEMBER_KEVIN_EMAIL, roles = Role.MEMBER)
+    @DisplayName("Should respond with 403")
+    public void memberShouldNotBeAbleToGetBookingsOfOthers() {
+        given()
+                .when().get(bookingEndpoint + "/" + BOOKING_ID_BY_LUKAS)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_FORBIDDEN);
+    }
+
+    @Test
+    @TestSecurity(user = ADMIN_EMAIL, roles = Role.ADMIN)
+    @DisplayName("Should respond with 200")
+    public void adminShouldBeAbleToGetAllBookings() {
+        given()
+                .when().get(bookingEndpoint)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(not("[]"));
+    }
+
+    @Test
     @TestSecurity(user = ADMIN_EMAIL, roles = Role.ADMIN)
     @DisplayName("Should respond with 200")
     public void adminShouldBeAbleToUpdateBookingOfMember() {
@@ -98,10 +134,22 @@ public class BookingResourceTest {
     public void adminShouldBeAbleToDeleteBookingOfMember() {
         given()
                 .contentType(ContentType.JSON)
-                .when().delete(bookingEndpoint + "/" + BOOKING_ID_BY_LUKAS)
+                .when().delete(bookingEndpoint + "/" + BOOKING_ID_BY_KEVIN)
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
+    }
+
+    @Test
+    @TestSecurity(user = ADMIN_EMAIL, roles = Role.ADMIN)
+    @DisplayName("Should respond with 214")
+    public void shouldNotBePossibleToDeleteAPassedBooking() {
+        given()
+                .contentType(ContentType.JSON)
+                .when().delete(bookingEndpoint + "/" + BOOKING_ID_BY_LUKAS)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_PRECONDITION_FAILED);
     }
 
     @Test
@@ -119,6 +167,28 @@ public class BookingResourceTest {
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
                 .body("bookingId", not(0));
+    }
+
+    @Test
+    @TestSecurity(user = ADMIN_EMAIL, roles = Role.ADMIN)
+    @DisplayName("Should respond with 204")
+    public void adminShouldBeAbleToAcceptBookings() {
+        given()
+                .when().put(bookingEndpoint + "/accept/" + BOOKING_ID_BY_KEVIN)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+    }
+
+    @Test
+    @TestSecurity(user = ADMIN_EMAIL, roles = Role.ADMIN)
+    @DisplayName("Should respond with 204")
+    public void adminShouldBeAbleToRejectBookings() {
+        given()
+                .when().put(bookingEndpoint + "/reject/" + BOOKING_ID_BY_KEVIN)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
 }
