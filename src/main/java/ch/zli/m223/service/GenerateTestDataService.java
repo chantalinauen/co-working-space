@@ -20,61 +20,62 @@ import io.quarkus.runtime.StartupEvent;
 @ApplicationScoped
 public class GenerateTestDataService {
 
-    @Inject
-    EntityManager entityManager;
+        @Inject
+        EntityManager entityManager;
 
-    @Transactional
-    public void generateTestData(@Observes StartupEvent event) {
+        @Transactional
+        public void generateTestData(@Observes StartupEvent event) {
 
-        // Durations
-        Duration durationMorning = new Duration("morning");
-        Duration durationAfternoon = new Duration("afternoon");
-        Duration durationDay = new Duration("day");
-        entityManager.persist(durationMorning);
-        entityManager.persist(durationAfternoon);
-        entityManager.persist(durationDay);
+                // Durations
+                Duration durationMorning = new Duration("morning");
+                Duration durationAfternoon = new Duration("afternoon");
+                Duration durationDay = new Duration("day");
+                entityManager.persist(durationMorning);
+                entityManager.persist(durationAfternoon);
+                entityManager.persist(durationDay);
 
-        // Roles
-        Role roleMember = new Role(Role.MEMBER);
-        Role roleAdmin = new Role(Role.ADMIN);
-        entityManager.persist(roleMember);
-        entityManager.persist(roleAdmin);
+                // Roles
+                Role roleMember = new Role(Role.MEMBER);
+                Role roleAdmin = new Role(Role.ADMIN);
+                entityManager.persist(roleMember);
+                entityManager.persist(roleAdmin);
 
-        // States
-        State stateAccept = new State(State.ACCEPTED);
-        State stateReject = new State(State.REJECTED);
-        State stateOpen = new State(State.OPEN);
-        entityManager.persist(stateAccept);
-        entityManager.persist(stateReject);
-        entityManager.persist(stateOpen);
+                // States
+                State stateAccept = new State(State.ACCEPTED);
+                State stateReject = new State(State.REJECTED);
+                State stateOpen = new State(State.OPEN);
+                entityManager.persist(stateAccept);
+                entityManager.persist(stateReject);
+                entityManager.persist(stateOpen);
 
-        // Members
-        Member memberKevin = new Member(
-                "Kevin", "Meier", "kevin.meier@test.ch",
-                "Password123", 7, null, true, roleMember);
+                // Members
+                Member memberKevin = new Member(
+                                "Kevin", "Meier", "kevin.meier@test.ch",
+                                "Password123", 7, null, true, roleMember);
 
-        Member memberLukas = new Member(
-                "Lukas", "Grunder", "lukas.grunder@test.ch",
-                "MeinPasswort", 9, "Tony Mate", false, roleMember);
+                Member memberLukas = new Member(
+                                "Lukas", "Grunder", "lukas.grunder@test.ch",
+                                "MeinPasswort", 9, "Tony Mate", false, roleMember);
 
-        Member memberChantal = new Member(
-                "Chantal", "Inauen", "chantal.inauen@test.ch",
-                "Password789", 0, "Cola Zero", true, roleAdmin);
+                Member memberChantal = new Member(
+                                "Chantal", "Inauen", "chantal.inauen@test.ch",
+                                "Password789", 0, "Cola Zero", true, roleAdmin);
 
-        entityManager.persist(memberKevin);
-        entityManager.persist(memberLukas);
-        entityManager.persist(memberChantal);
+                entityManager.persist(memberKevin);
+                entityManager.persist(memberLukas);
+                entityManager.persist(memberChantal);
 
-        // Bookings
-        Booking bookingOne = new Booking(LocalDate.now().plusMonths(3), durationMorning, stateOpen, false, memberKevin);
-        Booking bookingTwo = new Booking(LocalDate.now().minusMonths(2), durationAfternoon, stateAccept, false,
-                memberLukas);
-        Booking bookingThree = new Booking(LocalDate.now().plusMonths(7), durationAfternoon, stateReject, false,
-                memberKevin);
+                // Bookings
+                Booking bookingOne = new Booking(LocalDate.now().plusMonths(3), durationMorning, stateOpen, false,
+                                memberKevin);
+                Booking bookingTwo = new Booking(LocalDate.now().minusMonths(2), durationAfternoon, stateAccept, false,
+                                memberLukas);
+                Booking bookingThree = new Booking(LocalDate.now().plusMonths(7), durationAfternoon, stateReject, false,
+                                memberKevin);
 
-        entityManager.persist(bookingOne);
-        entityManager.persist(bookingTwo);
-        entityManager.persist(bookingThree);
-    }
+                entityManager.persist(bookingOne);
+                entityManager.persist(bookingTwo);
+                entityManager.persist(bookingThree);
+        }
 
 }
