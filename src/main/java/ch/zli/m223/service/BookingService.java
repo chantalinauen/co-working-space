@@ -1,5 +1,6 @@
 package ch.zli.m223.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -80,7 +81,11 @@ public class BookingService {
         if (booking == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         } else {
-            booking.setCancelled(true);
+            if (booking.getDate().isAfter(LocalDate.now())) {
+                booking.setCancelled(true);
+            } else {
+                throw new WebApplicationException(Response.Status.PRECONDITION_FAILED);
+            }
         }
     }
 
