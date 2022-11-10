@@ -58,7 +58,7 @@ public class Member {
     @Column(nullable = true)
     private boolean isActive = true;
 
-    @ManyToOne
+    @ManyToOne(optional = true)
     @JsonIgnoreProperties("members")
     @JoinColumn(name = "roleId")
     private Role role;
