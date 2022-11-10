@@ -11,6 +11,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 import ch.zli.m223.model.Member;
+import ch.zli.m223.model.Role;
 
 @ApplicationScoped
 public class MemberService {
@@ -24,6 +25,12 @@ public class MemberService {
 
     @Transactional
     public Member createMember(Member member) {
+        List<Member> allMembers = getAllMembers();
+        if (allMembers.isEmpty()) {
+            Role adminRole = entityManager.createQuery("SELECT r FROM Role r WHERE r.title = :role", Role.class)
+                    .setParameter("role", Role.ADMIN).getSingleResult();
+            member.setRole(adminRole);
+        }
         return entityManager.merge(member);
     }
 
@@ -31,7 +38,7 @@ public class MemberService {
     public Member updateMember(long memberId, Member member) {
         member.setMemberId(memberId);
         Member updatedMember = entityManager.merge(member);
-        
+
         if (updatedMember == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         } else {
